@@ -73,12 +73,10 @@ public class CreditForm extends VerticalLayout {
         );
 
 
-
         Credit credit = generateCredit();
         Credit credit1 = setElementsForm(creditForm,credit);
 
         creditForm.addComponentAsFirst(formTitle);
-        formTitle.setSizeFull();
         setButtons(creditForm, credit1);
         add(creditForm);
 
@@ -99,7 +97,6 @@ public class CreditForm extends VerticalLayout {
 
         numberFormFields.forEach(field ->{
             form.add(field);
-            field.setWidth("280px");
             if(Objects.equals(field.getLabel(), "monthlyPayment") || Objects.equals(field.getLabel(), "futureValue") || Objects.equals(field.getLabel(), "interestValue")){
                 field.setReadOnly(true);
             }
