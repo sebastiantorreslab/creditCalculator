@@ -4,8 +4,6 @@ package com.app.creditCalculator.views;
 import com.app.creditCalculator.domain.Credit;
 import com.app.creditCalculator.service.CreditServiceImpl;
 import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -13,13 +11,9 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.shared.Registration;
-import lombok.Getter;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
 
 @Route("form")
 @PageTitle("Calculate credit")
@@ -43,8 +37,8 @@ public class CreditForm extends FormLayout {
     };
     String[] labels = {
             "interestRate",
-            "amount",
-            "installmentCount",
+            "loanAmount",
+            "loanTerm",
             "monthlyPayment",
             "futureValue",
             "interestValue"
@@ -78,8 +72,15 @@ public class CreditForm extends FormLayout {
     private void  setFormLabels(String... labels) {
         for (String label : labels) {
             numberFormFields.add(new NumberField(label));
-            numberFormFields.forEach(this::add);
+
         }
+
+        numberFormFields.forEach(field ->{
+            add(field);
+            if(Objects.equals(field.getLabel(), "monthlyPayment") || Objects.equals(field.getLabel(), "futureValue") || Objects.equals(field.getLabel(), "interestValue")){
+                field.setReadOnly(true);
+            }
+        });
 
     }
 
@@ -95,10 +96,10 @@ public class CreditForm extends FormLayout {
                 case "interestRate":{
                     credit.setInterestRate(event.getValue());
                 }
-                case "amount":{
+                case "loanAmount":{
                     credit.setAmount(event.getValue());
                 }
-                case "installmentCount":{
+                case "loanTerm":{
                     credit.setLoanTerm(event.getValue().intValue());
                 }
                 default:
@@ -133,7 +134,7 @@ public class CreditForm extends FormLayout {
          Double futureValue = service.calculateFutureValue(credit);
          Double payment = service.calculatePayment(credit);
          credit.setFutureValue(futureValue);
-         credit.setMonthlyPayment(payment);
+         credit.setPayment(payment);
          return credit;
      }catch (Exception e){
 

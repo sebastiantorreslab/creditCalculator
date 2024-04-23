@@ -29,7 +29,7 @@ public class Credit  {
     private Double interestRate;
     private Double amount;
     private Integer loanTerm;
-    private Double monthlyPayment;
+    private Double payment;
     private Double futureValue;
     private Double interestValue;
 

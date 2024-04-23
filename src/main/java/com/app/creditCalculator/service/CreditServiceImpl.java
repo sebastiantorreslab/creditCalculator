@@ -47,7 +47,7 @@ public class CreditServiceImpl implements ICreditService {
     @Override
     public Double calculateFutureValue(Credit credit) {
         try {
-            return credit.getAmount() * Math.pow((1 + credit.getInterestRate()), credit.getLoanTerm());
+            return credit.getAmount() * (Math.pow(1 + (credit.getInterestRate()/100), credit.getLoanTerm()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,9 +56,9 @@ public class CreditServiceImpl implements ICreditService {
 
     @Override
     public Double calculatePayment(Credit credit) {
-        Double payment = (credit.getAmount() * credit.getInterestRate() * Math.pow(1 +
-                         credit.getInterestRate(), credit.getLoanTerm()))
-                        / (Math.pow(1+ credit.getInterestRate(),credit.getLoanTerm()) - 1) ;
+        Double payment = (credit.getAmount() * (credit.getInterestRate()/100) * Math.pow(1 +
+                (credit.getInterestRate()/100), credit.getLoanTerm()))
+                        / (Math.pow(1 + (credit.getInterestRate()/100),credit.getLoanTerm()) - 1) ;
 
         return payment;
     }
