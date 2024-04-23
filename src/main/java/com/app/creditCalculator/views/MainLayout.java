@@ -38,9 +38,7 @@ public class MainLayout extends AppLayout  {
 
         var header = new HorizontalLayout(new Nav(),title,form);
         header.setWidthFull();
-
         addToNavbar(header);
-
 
     }
 

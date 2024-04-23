@@ -8,6 +8,10 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -17,7 +21,7 @@ import java.util.Objects;
 
 @Route("form")
 @PageTitle("Calculate credit")
-public class CreditForm extends FormLayout {
+public class CreditForm extends VerticalLayout {
 
     ArrayList<NumberField> numberFormFields = new ArrayList<>();
     String[] creditTypes = {
@@ -49,14 +53,32 @@ public class CreditForm extends FormLayout {
         this.service = service;
         createForm();
 
+
     }
 
     private void createForm() {
 
+        H3 formTitle = new H3("Credit form");
+
         FormLayout creditForm = new FormLayout();
-        setFormLabels(labels);
+        setFormLabels(creditForm,labels);
+
+
+        //Styles
+        creditForm.setMinWidth("300px");
+        creditForm.setMaxWidth("500px");
+        creditForm.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("0px", 1),
+                new FormLayout.ResponsiveStep("400px", 2)
+        );
+
+
+
         Credit credit = generateCredit();
         Credit credit1 = setElementsForm(creditForm,credit);
+
+        creditForm.addComponentAsFirst(formTitle);
+        formTitle.setSizeFull();
         setButtons(creditForm, credit1);
         add(creditForm);
 
@@ -65,18 +87,19 @@ public class CreditForm extends FormLayout {
     private ComboBox<String> configureComboBox(FormLayout form,String... options) {
         ComboBox<String> creditField = new ComboBox<>("Credit Types");
         creditField.setItems(options);
-        form.add(creditField );
+        creditField.setMaxWidth("500px");
+        form.addComponentAsFirst(creditField);
         return creditField;
     }
 
-    private void  setFormLabels(String... labels) {
+    private void  setFormLabels(FormLayout form,String... labels) {
         for (String label : labels) {
             numberFormFields.add(new NumberField(label));
-
         }
 
         numberFormFields.forEach(field ->{
-            add(field);
+            form.add(field);
+            field.setWidth("280px");
             if(Objects.equals(field.getLabel(), "monthlyPayment") || Objects.equals(field.getLabel(), "futureValue") || Objects.equals(field.getLabel(), "interestValue")){
                 field.setReadOnly(true);
             }
@@ -86,7 +109,6 @@ public class CreditForm extends FormLayout {
 
     private Credit setElementsForm(FormLayout form, Credit credit) {
         ComboBox<String> creditValues = configureComboBox(form, creditTypes);
-
         creditValues.addValueChangeListener(event -> {
             String cv = event.getValue();
             credit.setCreditType(cv);
@@ -121,8 +143,12 @@ public class CreditForm extends FormLayout {
         button1.addClickListener(event -> setNewCredit(credit));
         button2.addClickListener(this::cancel);
         button1.addClickShortcut(Key.ENTER);
-        form.add(button1, button2);
 
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.add(button1,button2);
+        buttonLayout.setWidth("300px");
+        buttonLayout.setAlignItems(Alignment.CENTER);
+        form.add(buttonLayout);
 
     }
 
